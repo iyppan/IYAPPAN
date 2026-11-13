@@ -1,5 +1,27 @@
 (function () {
   const data = window.PORTFOLIO;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.documentElement.classList.add("js");
+
+  const splash = document.querySelector("#site-splash");
+  if (splash) {
+    document.body.classList.add("is-loading");
+    document.querySelector("#main")?.setAttribute("aria-busy", "true");
+    let splashClosed = false;
+    const closeSplash = () => {
+      if (splashClosed) return;
+      splashClosed = true;
+      splash.classList.add("is-done");
+      document.body.classList.remove("is-loading");
+      document.querySelector("#main")?.setAttribute("aria-busy", "false");
+      window.setTimeout(() => splash.remove(), 600);
+    };
+    const showMinimumTime = () => window.setTimeout(closeSplash, reducedMotion ? 180 : 1200);
+    if (document.readyState === "complete") showMinimumTime();
+    else window.addEventListener("load", showMinimumTime, { once: true });
+    window.setTimeout(closeSplash, reducedMotion ? 500 : 2200);
+  }
+
   if (!data) return;
 
   const html = (value) => String(value).replace(/[&<>"']/g, (char) => ({
@@ -99,9 +121,8 @@
     document.body.classList.remove("nav-open");
   }));
 
-  document.documentElement.classList.add("js");
   const revealItems = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if ("IntersectionObserver" in window && !reducedMotion) {
     const observer = new IntersectionObserver((entries, currentObserver) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -114,4 +135,72 @@
   } else {
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }
+
+  const cursor = document.querySelector("#custom-cursor");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (cursor && finePointer && !reducedMotion) {
+    document.body.classList.add("cursor-active");
+    window.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse") return;
+      cursor.style.left = `${event.clientX}px`;
+      cursor.style.top = `${event.clientY}px`;
+    }, { passive: true });
+    document.addEventListener("pointerdown", () => document.body.classList.add("cursor-down"));
+    document.addEventListener("pointerup", () => document.body.classList.remove("cursor-down"));
+  }
+
+  const soundToggle = document.querySelector("#sound-toggle");
+  let soundEnabled = false;
+  let audioContext;
+  let lastHoverSound = 0;
+  const playTone = (frequency, duration) => {
+    if (!soundEnabled) return;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    audioContext ||= new AudioContextClass();
+    if (audioContext.state === "suspended") audioContext.resume();
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.018, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.01);
+  };
+
+  if (soundToggle) {
+    soundToggle.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+      soundToggle.setAttribute("aria-label", soundEnabled ? "Turn interface sounds off" : "Turn interface sounds on");
+      soundToggle.querySelector(".sound-label").textContent = soundEnabled ? "Sound on" : "Sound off";
+      document.body.classList.toggle("sound-enabled", soundEnabled);
+      if (soundEnabled) playTone(660, 0.09);
+    });
+  }
+
+  const interactiveSelector = "a, button, .project-card";
+  document.addEventListener("pointerover", (event) => {
+    const target = event.target.closest?.(interactiveSelector);
+    if (!target || target.contains(event.relatedTarget)) return;
+    document.body.classList.add("cursor-hover");
+    const now = performance.now();
+    if (soundEnabled && now - lastHoverSound > 220) {
+      lastHoverSound = now;
+      playTone(760, 0.045);
+    }
+  });
+  document.addEventListener("pointerout", (event) => {
+    const target = event.target.closest?.(interactiveSelector);
+    if (target && !target.contains(event.relatedTarget)) document.body.classList.remove("cursor-hover");
+  });
+  document.addEventListener("click", (event) => {
+    if (event.target.closest?.("#sound-toggle")) return;
+    if (event.target.closest?.(interactiveSelector)) playTone(520, 0.065);
+  });
 })();

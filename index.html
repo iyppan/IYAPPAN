@@ -14,11 +14,34 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <div class="site-splash" id="site-splash" aria-hidden="true">
+    <div class="splash-card">
+      <div class="splash-brand"><span class="splash-brand-mark"><img src="assets/neon-star-graffiti-logo.png" alt=""></span><span>IYAPPAN A<small>GAME ART · VFX</small></span></div>
+      <div class="face-scan" aria-hidden="true">
+        <svg viewBox="0 0 120 120" fill="none">
+          <path class="face-corners" d="M38 14H24a10 10 0 0 0-10 10v14M82 14h14a10 10 0 0 1 10 10v14M106 82v14a10 10 0 0 1-10 10H82M38 106H24a10 10 0 0 1-10-10V82" />
+          <path class="face-outline" d="M39 38c3-12 12-19 21-19s18 7 21 19l5 24c3 17-8 31-26 31S31 79 34 62l5-24Z" />
+          <path class="face-features" d="M45 54h.2M74.8 54h.2M48 70c4 5 8 7 12 7s8-2 12-7" />
+          <path class="face-scan-line" d="M22 59h76" />
+        </svg>
+      </div>
+      <p class="splash-status"><span class="splash-status-dot"></span> INITIALIZING PORTFOLIO</p>
+      <div class="splash-progress"><span></span></div>
+      <span class="splash-caption">WORLDS · VFX · GAME ART</span>
+    </div>
+  </div>
+  <div class="custom-cursor" id="custom-cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
+
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Iyappan A, home">
       <span class="brand-mark brand-mark-image" aria-hidden="true"><img src="assets/neon-star-graffiti-logo.png" alt=""></span>
       <span class="brand-name">IYAPPAN A<small>GAME ART · VFX</small></span>
     </a>
+
+    <button class="sound-toggle" id="sound-toggle" type="button" aria-label="Turn interface sounds on" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l4 3V7l-4 3H4Z"/><path class="sound-wave" d="M15 9a4 4 0 0 1 0 6m2-8a7 7 0 0 1 0 10"/><path class="sound-mute" d="m16 9 4 6m0-6-4 6"/></svg>
+      <span class="sound-label">Sound off</span>
+    </button>
 
     <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation">
       <span></span><span></span>

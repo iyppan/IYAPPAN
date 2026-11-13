@@ -22,5 +22,5 @@ Project content and imagery were adapted from Iyappan’s supplied portfolio PDF
 - `index.html` — page content and navigation
 - `styles.css` — visual design, responsive layout and reduced-motion support
 - `portfolio.js` — editable portfolio data
-- `app.js` — content rendering, mobile navigation and subtle reveal animations
+- `app.js` — content rendering, mobile navigation, reveal/loading animations, desktop cursor effect and opt-in interface sounds
 - `assets/` — portrait and project images
