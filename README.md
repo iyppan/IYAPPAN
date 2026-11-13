@@ -10,6 +10,7 @@ Double-click `start-portfolio.cmd` on Windows to open a local preview with the p
 
 - Edit `portfolio.js` to change the bio, skills, project titles and descriptions, credits, experience, education, services and contact details.
 - The embedded YouTube playlist is in the `showreel` section of `index.html`.
+- The header and footer brand image is `assets/neon-star-graffiti-logo.png`.
 - Replace images in `assets/` and update the matching `image` paths and `alt` descriptions in `portfolio.js`.
 - The portrait is `assets/iyappan-portrait.jpg`.
 - Update the page title and summary in the `<head>` of `index.html` when publishing under a final domain.
